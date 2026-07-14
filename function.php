@@ -62,3 +62,34 @@ function ambrin_woocommerce_header_add_to_cart_fragment( $fragments ) {
     return $fragments;
 }
 add_filter( 'woocommerce_add_to_cart_fragments', 'ambrin_woocommerce_header_add_to_cart_fragment' );
+function ambrin_features_and_widgets() {
+    // 1. वर्डप्रेस मेनू सपोर्ट
+    register_nav_menus( array(
+        'footer_account_menu' => esc_html__( 'Footer Account Menu', 'ambrin' ),
+        'footer_info_menu'    => esc_html__( 'Footer Information Menu', 'ambrin' ),
+    ) );
+
+    // 2. वर्डप्रेस कस्टम लोगो सपोर्ट
+    add_theme_support( 'custom-logo' );
+
+    // 3. फ़ुटर के लिए विजिट एरिया (Sidebars)
+    register_sidebar( array(
+        'name'          => esc_html__( 'Footer Contact Info', 'ambrin' ),
+        'id'            => 'footer-contact',
+        'before_widget' => '<div class="footer-widget">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h4>',
+        'after_title'   => '</h4>',
+    ) );
+
+    register_sidebar( array(
+        'name'          => esc_html__( 'Footer Payment Methods', 'ambrin' ),
+        'id'            => 'footer-payment',
+        'before_widget' => '<div class="footer-widget">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h4>',
+        'after_title'   => '</h4>',
+    ) );
+}
+add_action( 'after_setup_theme', 'ambrin_features_and_widgets' );
+add_action( 'widgets_init', 'ambrin_features_and_widgets' );
