@@ -1,117 +1,132 @@
-<!DOCTYPE html>
-<html <?php language_attributes(); ?> class="no-js">
-
-<head>
-    <meta charset="<?php bloginfo( 'charset' ); ?>">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <?php wp_head(); ?>
-</head>
-
-<body <?php body_class(); ?>>
-    <?php wp_body_open(); ?>
-    
-    <!-- Header Start -->
-    <header class="header-area">
-        <div class="header-top ptb-10 ptb-md-20">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-4 col-md-12">
-                        <div class="header-top-links text-center text-lg-left">
-                            <ul>
-                                <!-- करेंसी और लैंग्वेज के लिए आमतौर पर Polylang या WPML प्लगइन्स शॉर्टकोड या हुक्स का उपयोग करते हैं -->
-                                <li><a href="#">USD</a>
-                                    <ul class="dropdown-list-menu">
-                                        <li><a href="#">EUR</a></li>
-                                        <li><a href="#">GBP</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">English</a>
-                                    <ul class="dropdown-list-menu">
-                                        <li><a href="#">French</a></li>
-                                        <li><a href="#">German</a></li>
-                                        <li><a href="#">Italian</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
+<!--header area start-->
+<header class="header_area">
+    <div class="container-fluid p-0">
+        <!--header top start--> 
+        <div class="header_top">
+            <div class="row align-items-center no-gutters">
+                <div class="col-lg-6 col-md-6">
+                    <div class="welcome_text">
+                        <p><strong>FREE SHIPPING:</strong> on Above on 200 AED ❤️</p>
                     </div>
-                    <div class="col-lg-8 col-md-12">
-                        <div class="header-top-links text-center text-lg-right">
-                            <ul>
-                                <?php if ( is_user_logged_in() ) : ?>
-                                    <li><a href="<?php echo esc_url( wc_get_account_endpoint_url( 'dashboard' ) ); ?>">My Account</a></li>
-                                    <li><a href="<?php echo esc_url( wp_logout_url( get_permalink() ) ); ?>">Logout</a></li>
-                                <?php else : ?>
-                                    <li><a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>">Sign In / Register</a></li>
-                                <?php endif; ?>
-                                
-                                <?php if ( function_exists( 'YITH_WCWL' ) ) : ?>
-                                    <li><a href="<?php echo esc_url( YITH_WCWL()->get_wishlist_url() ); ?>">Wishlist</a></li>
-                                <?php endif; ?>
-                            </ul>
-                        </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="right_info text-right">
+                        <ul>
+                            <li class="language">
+                                <a href="#">English <i class="fa fa-angle-down"></i></a>
+                                <ul class="dropdown_language">
+                                    <li><a href="#">French</a></li>
+                                    <li><a href="#">German</a></li>
+                                </ul> 
+                            </li> 
+                            <?php if ( is_user_logged_in() ) : ?>
+                                <li class="top_links"><a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>">My Account</a></li> 
+                                <li class="top_links"><a href="<?php echo site_url('/order-tracking'); ?>">Order Tracking</a></li> 
+                                <li class="top_links"><a href="<?php echo wp_logout_url( get_permalink() ); ?>">Sign Out</a></li>
+                            <?php else : ?>
+                                <li class="top_links"><a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>">Sign In / Register</a></li>
+                            <?php endif; ?>
+                        </ul>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="header-bottom menu-sticky ptb-20 ptb-md-20">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-3 col-md-4 col-6">
-                        <div class="logo">
-                            <?php 
-                            if ( has_custom_logo() ) {
-                                the_custom_logo();
-                            } else {
-                                echo '<a href="' . esc_url( home_url( '/' ) ) . '"><h2>' . get_bloginfo( 'name' ) . '</h2></a>';
-                            }
+        </div>    
+        <!--header top end-->
+        
+        <!--header bottom start--> 
+        <div class="header_bottom sticky-header">
+            <div class="row align-items-center">
+                <div class="col-lg-2">
+                    <div class="logo">
+                        <a href="<?php echo esc_url( home_url( '/' ) ); ?>">
+                            <img src="<?php echo esc_url( get_template_directory_uri() ); ?>/assets/img/logo/logo.png" alt="<?php bloginfo( 'name' ); ?>">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="main_menu_inner">
+                        <!-- Desktop Dynamic Menu -->
+                        <div class="main_menu d-none d-lg-block"> 
+                            <?php
+                            wp_nav_menu( array(
+                                'theme_location' => 'header-menu',
+                                'container'      => false,
+                                'menu_class'     => '',
+                                'fallback_cb'    => '__return_false'
+                            ) );
                             ?>
                         </div>
-                    </div>
-                    <div class="col-lg-6 d-none d-lg-block">
-                        <div class="main-menu text-center">
-                            <nav>
-                                <?php
-                                wp_nav_menu( array(
-                                    'theme_location' => 'main-menu',
-                                    'container'      => false,
-                                    'fallback_cb'    => false,
-                                    'items_wrap'     => '<ul>%3$s</ul>',
-                                ) );
-                                ?>
-                            </nav>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-8 col-6">
-                        <div class="header-cart-search text-right">
-                            <div class="header-search">
-                                <a href="#"><i class="ion-ios-search-strong"></i></a>
-                                <div class="search-box">
-                                    <form role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-                                        <input type="text" name="s" placeholder="Search entire store here..." value="<?php echo get_search_query(); ?>">
-                                        <input type="hidden" name="post_type" value="product" />
-                                        <button type="submit"><i class="ion-ios-search-strong"></i></button>
-                                    </form>
+                    </div>    
+                </div>
+
+                <!-- Search, Wishlist and WooCommerce Dynamic Mini-Cart -->
+                <div class="col-lg-3">
+                    <div class="search_area search_four search_five d-flex align-items-center justify-content-end">
+                        <div class="search_dropdown mr-3">
+                            <a class="search_button" href="#"><i class="fa fa-search"></i></a>
+                        </div>  
+                        
+                        <div class="wishlist_box mr-3 position-relative">
+                            <?php 
+                            // Agar YITH Wishlist plugin active hai toh dynamic count show karega
+                            $wishlist_count = function_exists( 'YITH_WCWL' ) ? YITH_WCWL()->count_products() : 0;
+                            ?>
+                            <a class="search_button" href="<?php echo function_exists( 'YITH_WCWL' ) ? esc_url( YITH_WCWL()->get_wishlist_url() ) : '#'; ?>"><i class="fa fa-heart-o"></i></a>
+                            <span class="count" id="wishlist-count"><?php echo esc_html( $wishlist_count ); ?></span>
+                        </div>                      
+                        
+                        <div class="shopping_cart cart_four position-relative">
+                            <a href="<?php echo esc_url( wc_get_cart_url() ); ?>"><i class="fa fa-shopping-cart"></i></a>
+                            <!-- Dynamic Cart Items Count Badge -->
+                            <span class="count" id="cart-qty-badge"><?php echo WC()->cart->get_cart_contents_count(); ?></span>
+
+                            <!-- Mini Cart Dropdown Panel (Will update automatically via WordPress AJAX Fragments) -->
+                            <div class="mini_cart" id="mini-cart-wrapper">
+                                <div class="cart_gallery_scroll" style="max-height: 280px; overflow-y: auto;">
+                                    <?php if ( ! WC()->cart->is_empty() ) : ?>
+                                        <?php
+                                        foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
+                                            $_product = $cart_item['data'];
+                                            $product_permalink = $_product->is_visible() ? $_product->get_permalink( $cart_item ) : '';
+                                            ?>
+                                            <div class="cart_item">
+                                                <div class="cart_img">
+                                                    <a href="<?php echo esc_url( $product_permalink ); ?>">
+                                                        <?php echo $_product->get_image(); ?>
+                                                    </a>
+                                                </div>
+                                                <div class="cart_info">
+                                                    <a href="<?php echo esc_url( $product_permalink ); ?>"><?php echo esc_html( $_product->get_name() ); ?></a>
+                                                    <span class="quantity">Qty: <?php echo $cart_item['quantity']; ?></span>
+                                                    <span class="cart_price"><?php echo WC()->cart->get_product_price( $_product ); ?></span>
+                                                    <div class="cart_remove">
+                                                        <a href="<?php echo esc_url( wc_get_cart_remove_url( $cart_item_key ) ); ?>" class="remove_from_cart_button" data-cart_item_key="<?php echo esc_attr( $cart_item_key ); ?>"><i class="fa fa-times-circle"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+                                    <?php else : ?>
+                                        <div class="text-center p-3 text-muted">Your cart is empty.</div>
+                                    <?php endif; ?>
                                 </div>
-                            </div>
-                            
-                            <!-- WooCommerce Dynamic Mini Cart -->
-                            <div class="header-cart position-relative">
-                                <?php if ( class_exists( 'WooCommerce' ) ) : ?>
-                                    <a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="wp-custom-cart-count">
-                                        <i class="ion-bag"></i>
-                                        <span><?php echo esc_html( WC()->cart->get_cart_contents_count() ); ?></span>
-                                    </a>
-                                    <div class="shopping-cart-content widget_shopping_cart_content">
-                                        <?php woocommerce_mini_cart(); ?>
+                                
+                                <?php if ( ! WC()->cart->is_empty() ) : ?>
+                                    <div class="total_price d-flex justify-content-between">
+                                        <span>Subtotal:</span>
+                                        <span class="prices" id="mini-cart-subtotal"><?php wc_cart_totals_subtotal_html(); ?></span>
+                                    </div>
+                                    <div class="cart_button">
+                                        <a href="<?php echo esc_url( wc_get_checkout_url() ); ?>">Check out</a>
+                                        <a href="<?php echo esc_url( wc_get_cart_url() ); ?>">View Cart</a>
                                     </div>
                                 <?php endif; ?>
                             </div>
-                            
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
-    </header>
+    </div>
+</header>
+<!--header area end-->
