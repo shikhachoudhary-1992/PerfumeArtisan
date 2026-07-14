@@ -93,3 +93,76 @@ function ambrin_features_and_widgets() {
 }
 add_action( 'after_setup_theme', 'ambrin_features_and_widgets' );
 add_action( 'widgets_init', 'ambrin_features_and_widgets' );
+<?php
+// 1. Navigation Menu Register karein
+function register_my_menus() {
+    register_nav_menus(
+        array(
+            'header-menu' => __( 'Header Menu' ),
+        )
+    );
+}
+add_action( 'init', 'register_my_menus' );
+
+// 2. AJAX Mini-Cart Fragments (Bina page refresh ke cart count aur items update karne ke liye)
+add_filter( 'woocommerce_add_to_cart_fragments', 'header_mini_cart_fragments' );
+function header_mini_cart_fragments( $fragments ) {
+    ob_start();
+    ?>
+    <span class="count" id="cart-qty-badge"><?php echo WC()->cart->get_cart_contents_count(); ?></span>
+    <?php
+    $fragments['#cart-qty-badge'] = ob_get_clean();
+
+    ob_start();
+    ?>
+    <div class="mini_cart" id="mini-cart-wrapper">
+        <div class="cart_gallery_scroll" style="max-height: 280px; overflow-y: auto;">
+            <?php if ( ! WC()->cart->is_empty() ) : ?>
+                <?php
+                foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
+                    $_product   = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
+                    $product_id = apply_filters( 'woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key );
+
+                    if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_cart_item_visible', true, $cart_item, $cart_item_key ) ) {
+                        $product_permalink = apply_filters( 'woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink( $cart_item ) : '', $cart_item, $cart_item_key );
+                        ?>
+                        <div class="cart_item">
+                            <div class="cart_img">
+                                <a href="<?php echo esc_url( $product_permalink ); ?>">
+                                    <?php echo $_product->get_image(); ?>
+                                </a>
+                            </div>
+                            <div class="cart_info">
+                                <a href="<?php echo esc_url( $product_permalink ); ?>"><?php echo esc_html( $_product->get_name() ); ?></a>
+                                <span class="quantity">Qty: <?php echo $cart_item['quantity']; ?></span>
+                                <span class="cart_price"><?php echo WC()->cart->get_product_price( $_product ); ?></span>
+                                <div class="cart_remove">
+                                    <a href="<?php echo esc_url( wc_get_cart_remove_url( $cart_item_key ) ); ?>" class="remove_from_cart_button" data-cart_item_key="<?php echo esc_attr( $cart_item_key ); ?>" data-product_id="<?php echo esc_attr( $product_id ); ?>"><i class="fa fa-times-circle"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                }
+                ?>
+            <?php else : ?>
+                <div class="text-center p-3 text-muted">Your cart is empty.</div>
+            <?php endif; ?>
+        </div>
+        
+        <?php if ( ! WC()->cart->is_empty() ) : ?>
+            <div class="total_price d-flex justify-content-between">
+                <span>Subtotal:</span>
+                <span class="prices" id="mini-cart-subtotal"><?php wc_cart_totals_subtotal_html(); ?></span>
+            </div>
+            <div class="cart_button">
+                <a href="<?php echo esc_url( wc_get_checkout_url() ); ?>">Check out</a>
+                <a href="<?php echo esc_url( wc_get_cart_url() ); ?>">View Cart</a>
+            </div>
+        <?php endif; ?>
+    </div>
+    <?php
+    $fragments['#mini-cart-wrapper'] = ob_get_clean();
+    
+    return $fragments;
+}
